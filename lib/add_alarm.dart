@@ -1,4 +1,4 @@
-import 'package:clock_app/widgets/circle_day.dart';
+import 'package:day_selector/day_selector.dart';
 import 'package:flutter/material.dart';
 
 class AddAlarm extends StatefulWidget {
@@ -10,6 +10,7 @@ class AddAlarm extends StatefulWidget {
 class _AddAlarmState extends State<AddAlarm> {
   TimeOfDay _selectedTime;
   ValueChanged<TimeOfDay> selectTime;
+  List selected = [];
 
   @override
   void initState() {
@@ -48,18 +49,11 @@ class _AddAlarmState extends State<AddAlarm> {
                   SizedBox(
                     height: 20.0,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      circleDay('M', context, false),
-                      circleDay('T', context, true),
-                      circleDay('W', context, true),
-                      circleDay('T', context, true),
-                      circleDay('F', context, false),
-                      circleDay('S', context, true),
-                      circleDay('S', context, false),
-                    ],
-                  ),
+                  DaySelector(
+                      value: null,
+                      onChange: (value) {},
+                      color: Colors.white,
+                      mode: DaySelector.modeFull),
                   SizedBox(
                     height: 30.0,
                   ),
