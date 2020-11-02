@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
+import '1.dart';
+
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
 
