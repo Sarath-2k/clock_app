@@ -1,13 +1,11 @@
 import 'dart:async';
+import 'package:clock_app/alarmpage.dart';
 import 'package:clock_app/shapes_painter.dart';
 import 'package:clock_app/stopwatch.dart';
 import 'package:clock_app/timer.dart';
-import 'package:clock_app/widgets/alarm_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
-
-import '1.dart';
 
 class Home extends StatefulWidget {
   Home({Key key}) : super(key: key);
@@ -108,16 +106,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 ),
               ),
               //AlarmPage
-              Container(
-                child: ListView(
-                  children: <Widget>[
-                    alarmItem(_timeString, true),
-                    alarmItem(_timeString, true),
-                    alarmItem(_timeString, false),
-                    alarmItem(_timeString, false),
-                  ],
-                ),
-              ),
+              AlarmPage(),
               //Timer
               TimerPage(),
               //Stopwatch
@@ -125,22 +114,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             ],
           ),
         ),
-        floatingActionButton: _bottomButtons(),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
-  }
-
-  Widget _bottomButtons() {
-    return _tabController.index == 1
-        ? FloatingActionButton(
-            onPressed: () => Navigator.pushNamed(context, '/add-alarm'),
-            backgroundColor: Color(0xff65D1BA),
-            child: Icon(
-              Icons.add,
-              size: 20.0,
-            ),
-          )
-        : null;
   }
 }

@@ -23,24 +23,14 @@ class _AddAlarmState extends State<AddAlarm> {
         backgroundColor: Color(0xff1B2C57),
         appBar: AppBar(
           backgroundColor: Color(0xff1B2C57),
-          title: Column(
-            children: <Widget>[
-              Icon(
-                Icons.alarm_add,
-                color: Color(0xff65D1BA),
-              ),
-              Text('Add alarm',
-                  style: TextStyle(color: Color(0xff65D1BA), fontSize: 25.0))
-            ],
-          ),
         ),
         body: Padding(
-            padding: EdgeInsets.all(20.0),
+            padding: EdgeInsets.all(10.0),
             child: Container(
               child: Column(
                 children: <Widget>[
                   SizedBox(
-                    height: 60.0,
+                    height: 40.0,
                   ),
                   new GestureDetector(
                     child: Text(
@@ -56,59 +46,22 @@ class _AddAlarmState extends State<AddAlarm> {
                     },
                   ),
                   SizedBox(
-                    height: 30.0,
+                    height: 20.0,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      circleDay('Mon', context, false),
-                      circleDay('Tue', context, true),
-                      circleDay('Wed', context, true),
-                      circleDay('Thu', context, true),
-                      circleDay('Fri', context, false),
-                      circleDay('Sat', context, true),
-                      circleDay('Sun', context, false),
+                      circleDay('M', context, false),
+                      circleDay('T', context, true),
+                      circleDay('W', context, true),
+                      circleDay('T', context, true),
+                      circleDay('F', context, false),
+                      circleDay('S', context, true),
+                      circleDay('S', context, false),
                     ],
                   ),
                   SizedBox(
-                    height: 60.0,
-                  ),
-                  SizedBox(
-                    height: 2.0,
-                    child: Container(
-                      color: Colors.white30,
-                    ),
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.notifications_none,
-                      color: Colors.white,
-                    ),
-                    title: Text('Alarm Notification',
-                        style: TextStyle(color: Colors.white)),
-                  ),
-                  SizedBox(
-                    height: 2.0,
-                    child: Container(
-                      color: Colors.white30,
-                    ),
-                  ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.check_box,
-                      color: Colors.white,
-                    ),
-                    title:
-                        Text('Vibrate', style: TextStyle(color: Colors.white)),
-                  ),
-                  SizedBox(
-                    height: 2.0,
-                    child: Container(
-                      color: Colors.white30,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 60.0,
+                    height: 30.0,
                   ),
                   FlatButton(
                       color: Theme.of(context).accentColor,

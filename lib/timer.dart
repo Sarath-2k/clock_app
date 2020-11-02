@@ -1,182 +1,225 @@
-// import 'package:flutter/material.dart';
-// import 'package:circular_countdown_timer/circular_countdown_timer.dart';
+import 'dart:async';
 
-// class TimerPage extends StatefulWidget {
-//   @override
-//   _TimerPageState createState() => _TimerPageState();
-// }
+import 'package:flutter/material.dart';
+import 'package:numberpicker/numberpicker.dart';
 
-// class _TimerPageState extends State<TimerPage> {
-//   CountDownController _controller = CountDownController();
-//   bool _isPause = false;
-//   int timerduration = 100;
+class TimerPage extends StatefulWidget {
+  @override
+  _TimerPageState createState() => _TimerPageState();
+}
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Theme.of(context).primaryColor,
-//       body: Column(
-//         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//         children: [
-//           Center(
-//               child: CircularCountDownTimer(
-//             // Countdown duration in Seconds
-//             duration: timerduration,
+int hour = 0;
+int min = 0;
+int sec = 0;
+bool started = true;
+bool stopped = true;
+int timefortimer = 0;
+String timetodisplay = "";
+bool checktimer = true;
 
-//             // Controller to control (i.e Pause, Resume, Restart) the Countdown
-//             controller: _controller,
+class _TimerPageState extends State<TimerPage> {
+  void start() {
+    setState(() {
+      started = false;
+      stopped = false;
+    });
+    timefortimer = ((hour * 60 * 60) + (min * 60) + sec);
+    // debugPrint(timefortimer.toString());
+    Timer.periodic(
+        Duration(
+          seconds: 1,
+        ), (Timer t) {
+      setState(() {
+        if (timefortimer < 1 || checktimer == false) {
+          t.cancel();
+          checktimer = true;
+          timetodisplay = "";
+          started = true;
+          stopped = true;
+        } else if (timefortimer < 60) {
+          timetodisplay = timefortimer.toString();
+          timefortimer = timefortimer - 1;
+        } else if (timefortimer < 3600) {
+          int m = timefortimer ~/ 60;
+          int s = timefortimer - (60 * m);
+          timetodisplay = m.toString() + ":" + s.toString();
+          timefortimer = timefortimer - 1;
+        } else {
+          int h = timefortimer ~/ 3600;
+          int t = timefortimer - (3600 * h);
+          int m = t ~/ 60;
+          int s = t - (60 * m);
+          timetodisplay =
+              h.toString() + ":" + m.toString() + ":" + s.toString();
+          timefortimer = timefortimer - 1;
+        }
+      });
+    });
+  }
 
-//             // Width of the Countdown Widget
-//             width: MediaQuery.of(context).size.width / 2,
+  void stop() {
+    setState(() {
+      started = true;
+      stopped = true;
+      checktimer = false;
+    });
+  }
 
-//             // Height of the Countdown Widget
-//             height: MediaQuery.of(context).size.height / 2,
-
-//             // Default Color for Countdown Timer
-//             color: Theme.of(context).accentColor,
-
-//             // Filling Color for Countdown Timer
-//             fillColor: Colors.red,
-
-//             // Background Color for Countdown Widget
-//             backgroundColor: null,
-
-//             // Border Thickness of the Countdown Circle
-//             strokeWidth: 5.0,
-
-//             // Text Style for Countdown Text
-//             textStyle: TextStyle(
-//                 fontSize: 22.0,
-//                 color: Colors.white,
-//                 fontWeight: FontWeight.bold),
-
-//             // true for reverse countdown (max to 0), false for forward countdown (0 to max)
-//             isReverse: true,
-
-//             // true for reverse animation, false for forward animation
-//             isReverseAnimation: false,
-
-//             // Optional [bool] to hide the [Text] in this widget.
-//             isTimerTextShown: true,
-
-//             // Function which will execute when the Countdown Ends
-//             onComplete: () {
-//               // Here, do whatever you want
-//               print('Countdown Ended');
-//             },
-//           )),
-//           Row(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: [
-//               Row(
-//                 // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                 children: [
-//                   IconButton(
-//                       icon: Icon(
-//                         Icons.exposure_minus_1,
-//                         color: Theme.of(context).accentColor,
-//                       ),
-//                       onPressed: () {
-//                         setState(() {
-//                           timerduration = timerduration - 60;
-//                           _controller.restart();
-//                         });
-//                       }),
-//                   RaisedButton(
-//                     onPressed: null,
-//                     child: Text(
-//                       "Min",
-//                       style: TextStyle(color: Colors.white),
-//                     ),
-//                   ),
-//                   IconButton(
-//                       icon: Icon(
-//                         Icons.exposure_plus_1,
-//                         color: Theme.of(context).accentColor,
-//                       ),
-//                       onPressed: () {
-//                         setState(() {
-//                           timerduration = timerduration + 60;
-//                           _controller.restart();
-//                         });
-//                       }),
-//                 ],
-//               ),
-//               Row(
-//                 // mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                 children: [
-//                   IconButton(
-//                       icon: Icon(
-//                         Icons.exposure_minus_1,
-//                         color: Theme.of(context).accentColor,
-//                       ),
-//                       onPressed: () {
-//                         setState(() {
-//                           timerduration = timerduration - 1;
-//                           _controller.restart();
-//                         });
-//                       }),
-//                   RaisedButton(
-//                     onPressed: null,
-//                     child: Text(
-//                       "Sec",
-//                       style: TextStyle(color: Colors.white),
-//                     ),
-//                   ),
-//                   IconButton(
-//                       icon: Icon(
-//                         Icons.exposure_plus_1,
-//                         color: Theme.of(context).accentColor,
-//                       ),
-//                       onPressed: () {
-//                         setState(() {
-//                           timerduration = timerduration + 1;
-//                           _controller.restart();
-//                         });
-//                       }),
-//                 ],
-//               )
-//             ],
-//           ),
-//           Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//             children: [
-//               FloatingActionButton(
-//                   child: Icon(Icons.refresh),
-//                   onPressed: () {
-//                     _controller.restart();
-//                   }),
-//               FloatingActionButton(
-//                   child: Icon(_isPause ? Icons.play_arrow : Icons.pause),
-//                   onPressed: () {
-//                     setState(() {
-//                       if (_isPause) {
-//                         _isPause = false;
-//                         _controller.resume();
-//                       } else {
-//                         _isPause = true;
-//                         _controller.pause();
-//                       }
-//                     });
-//                   }),
-//               // FloatingActionButton.extended(
-//               //     onPressed: () {
-//               //       setState(() {
-//               //         if (_isPause) {
-//               //           _isPause = false;
-//               //           _controller.resume();
-//               //         } else {
-//               //           _isPause = true;
-//               //           _controller.pause();
-//               //         }
-//               //       });
-//               //     },
-//               //     icon: Icon(_isPause ? Icons.play_arrow : Icons.pause),
-//               //     label: Text(_isPause ? "Resume" : "Pause")),
-//             ],
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          //numberpicker
+          Expanded(
+              flex: 6,
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: Text(
+                            "HH",
+                            style: TextStyle(
+                                color: Color(0xFFFFFFFF),
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle, color: Colors.white),
+                          child: NumberPicker.integer(
+                              listViewWidth: 60.0,
+                              infiniteLoop: true,
+                              initialValue: hour,
+                              minValue: 0,
+                              maxValue: 23,
+                              onChanged: (val) {
+                                setState(() {
+                                  hour = val;
+                                });
+                              }),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: Text(
+                            "MM",
+                            style: TextStyle(
+                                color: Color(0xFFFFFFFF),
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle, color: Colors.white),
+                          child: NumberPicker.integer(
+                              listViewWidth: 60.0,
+                              infiniteLoop: true,
+                              initialValue: min,
+                              minValue: 00,
+                              maxValue: 59,
+                              onChanged: (val) {
+                                setState(() {
+                                  min = val;
+                                });
+                              }),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: Text(
+                            "SS",
+                            style: TextStyle(
+                                color: Color(0xFFFFFFFF),
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle, color: Colors.white),
+                          child: NumberPicker.integer(
+                              listViewWidth: 60.0,
+                              infiniteLoop: true,
+                              initialValue: sec,
+                              minValue: 0,
+                              maxValue: 59,
+                              onChanged: (val) {
+                                setState(() {
+                                  sec = val;
+                                });
+                              }),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              )),
+          //text
+          Expanded(
+              flex: 1,
+              child: Text(
+                timetodisplay,
+                style: TextStyle(
+                    fontSize: 30.0,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white),
+              )),
+          //buttons
+          Expanded(
+              flex: 3,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  RaisedButton(
+                    onPressed: started ? start : null,
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 40.0, vertical: 10.0),
+                    child: Text(
+                      "Start",
+                      style: TextStyle(color: Color(0xff65D1BA)),
+                    ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                  ),
+                  RaisedButton(
+                    onPressed: stopped ? null : stop,
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 40.0, vertical: 10.0),
+                    child: Text(
+                      "Stop",
+                      style: TextStyle(color: Color(0xff65D1BA)),
+                    ),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                  )
+                ],
+              ))
+        ],
+      ),
+    );
+  }
+}
