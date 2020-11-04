@@ -78,7 +78,7 @@ class _StopWatchPageState extends State<StopWatchPage> {
                 stream: _stopWatchTimer.minuteTime,
                 initialData: _stopWatchTimer.minuteTime.value,
                 builder: (context, snap) {
-                  final value = snap.data;
+                  // final value = snap.data;
                   return Column(
                     children: <Widget>[],
                   );
@@ -93,7 +93,7 @@ class _StopWatchPageState extends State<StopWatchPage> {
                 stream: _stopWatchTimer.secondTime,
                 initialData: _stopWatchTimer.secondTime.value,
                 builder: (context, snap) {
-                  final value = snap.data;
+                  // final value = snap.data;
                   return Column(
                     children: <Widget>[],
                   );

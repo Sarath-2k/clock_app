@@ -1,3 +1,4 @@
+import 'package:clock_app/main.dart';
 import 'package:day_selector/day_selector.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +11,7 @@ class AddAlarm extends StatefulWidget {
 class _AddAlarmState extends State<AddAlarm> {
   TimeOfDay _selectedTime;
   ValueChanged<TimeOfDay> selectTime;
-  List selected = [];
+  List<bool> selected = [false, false, false, false, false, false, false];
 
   @override
   void initState() {
@@ -21,10 +22,8 @@ class _AddAlarmState extends State<AddAlarm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xff1B2C57),
-        appBar: AppBar(
-          backgroundColor: Color(0xff1B2C57),
-        ),
+        backgroundColor: Colors.grey[900],
+        appBar: AppBar(backgroundColor: Colors.grey[900]),
         body: Padding(
             padding: EdgeInsets.all(10.0),
             child: Container(
@@ -49,11 +48,57 @@ class _AddAlarmState extends State<AddAlarm> {
                   SizedBox(
                     height: 20.0,
                   ),
-                  DaySelector(
-                      value: null,
-                      onChange: (value) {},
-                      color: Colors.white,
-                      mode: DaySelector.modeFull),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DaySelector(
+                        onChange: (value) {
+                          print('value is $value');
+                          if (DaySelector.monday & value ==
+                              DaySelector.monday) {
+                            selected[0] = true;
+                          } else {
+                            selected[0] = false;
+                          }
+                          if (DaySelector.tuesday & value ==
+                              DaySelector.tuesday) {
+                            selected[1] = true;
+                          } else {
+                            selected[1] = false;
+                          }
+                          if (DaySelector.wednesday & value ==
+                              DaySelector.wednesday) {
+                            selected[2] = true;
+                          } else {
+                            selected[2] = false;
+                          }
+                          if (DaySelector.thursday & value ==
+                              DaySelector.thursday) {
+                            selected[3] = true;
+                          } else {
+                            selected[3] = false;
+                          }
+                          if (DaySelector.friday & value ==
+                              DaySelector.friday) {
+                            selected[4] = true;
+                          } else {
+                            selected[4] = false;
+                          }
+                          if (DaySelector.saturday & value ==
+                              DaySelector.saturday) {
+                            selected[5] = true;
+                          } else {
+                            selected[5] = false;
+                          }
+                          if (DaySelector.sunday & value ==
+                              DaySelector.sunday) {
+                            selected[6] = true;
+                          } else {
+                            selected[6] = false;
+                          }
+                        },
+                        color: Colors.white,
+                        mode: DaySelector.modeFull),
+                  ),
                   SizedBox(
                     height: 30.0,
                   ),
@@ -61,7 +106,11 @@ class _AddAlarmState extends State<AddAlarm> {
                       color: Theme.of(context).accentColor,
                       child:
                           Text('Save', style: TextStyle(color: Colors.white)),
-                      onPressed: () => Navigator.of(context).pop())
+                      onPressed: () {
+                        alarmlist[alarmcount].days = selected;
+                        alarmcount++;
+                        Navigator.of(context).pop();
+                      })
                 ],
               ),
             )),
@@ -82,6 +131,9 @@ class _AddAlarmState extends State<AddAlarm> {
         await showTimePicker(context: context, initialTime: _selectedTime);
     setState(() {
       _selectedTime = picked;
+      alarmlist[alarmcount].time = picked;
     });
   }
 }
+
+class Alarmtime {}

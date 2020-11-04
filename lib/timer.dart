@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 class TimerPage extends StatefulWidget {
@@ -36,6 +37,15 @@ class _TimerPageState extends State<TimerPage> {
           timetodisplay = "";
           started = true;
           stopped = true;
+          if (timefortimer == 0) {
+            FlutterRingtonePlayer.play(
+              android: AndroidSounds.alarm,
+              ios: IosSounds.alarm,
+              looping: true, // Android only - API >= 28
+              volume: 1, // Android only - API >= 28
+              asAlarm: true, // Android only - all APIs
+            );
+          }
         } else if (timefortimer < 60) {
           timetodisplay = timefortimer.toString();
           timefortimer = timefortimer - 1;

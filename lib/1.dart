@@ -1,100 +1,51 @@
-import 'package:flutter/material.dart';
+// Copyright 2018 The Time Machine Authors. All rights reserved.
+// Use of this source code is governed by the Apache License 2.0, as found in the LICENSE.txt file.
 
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(title: Text("Testing")),
-    body: Center(
-      child: RaisedButton(
-        child: Text("Show dialog"),
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return Dialog(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40)),
-                elevation: 16,
-                child: Container(
-                  height: 400.0,
-                  width: 360.0,
-                  child: ListView(
-                    children: <Widget>[
-                      SizedBox(height: 20),
-                      Center(
-                        child: Text(
-                          "Leaderboard",
-                          style: TextStyle(
-                              fontSize: 24,
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      _buildName(
-                          imageAsset: 'assets/chocolate.jpg',
-                          name: "Name 1",
-                          score: 1000),
-                      _buildName(
-                          imageAsset: 'assets/chocolate.jpg',
-                          name: "Name 2",
-                          score: 2000),
-                      _buildName(
-                          imageAsset: 'assets/chocolate.jpg',
-                          name: "Name 3",
-                          score: 3000),
-                      _buildName(
-                          imageAsset: 'assets/chocolate.jpg',
-                          name: "Name 4",
-                          score: 4000),
-                      _buildName(
-                          imageAsset: 'assets/chocolate.jpg',
-                          name: "Name 5",
-                          score: 5000),
-                      _buildName(
-                          imageAsset: 'assets/chocolate.jpg',
-                          name: "Name 6",
-                          score: 6000),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        },
-      ),
-    ),
-  );
-}
+import 'dart:async';
 
-Widget _buildName({String imageAsset, String name, double score}) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-    child: Column(
-      children: <Widget>[
-        SizedBox(height: 12),
-        Container(height: 2, color: Colors.redAccent),
-        SizedBox(height: 12),
-        Row(
-          children: <Widget>[
-            CircleAvatar(
-              backgroundImage: AssetImage(imageAsset),
-              radius: 30,
-            ),
-            SizedBox(width: 12),
-            Text(name),
-            Spacer(),
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-              child: Text("${score}"),
-              decoration: BoxDecoration(
-                color: Colors.yellow[900],
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
+import 'package:time_machine/time_machine.dart';
+import 'package:time_machine/time_machine_text_patterns.dart';
+
+Future main() async {
+  try {
+    // Sets up timezone and culture information
+    await TimeMachine.initialize();
+    print('Hello, ${DateTimeZone.local} from the Dart Time Machine!\n');
+
+    var tzdb = await DateTimeZoneProviders.tzdb;
+    var paris = await tzdb['Europe/Paris'];
+
+    var now = Instant.now();
+
+    print('Basic');
+    print('UTC Time: $now');
+    print('Local Time: ${now.inLocalZone()}');
+    print('Paris Time: ${now.inZone(paris)}\n');
+
+    print('Formatted');
+    print('UTC Time: ${now.toString('dddd yyyy-MM-dd HH:mm')}');
+    print(
+        'Local Time: ${now.inLocalZone().toString('dddd yyyy-MM-dd HH:mm')}\n');
+
+    var french = await Cultures.getCulture('fr-FR');
+    print('Formatted and French ($french)');
+    print('UTC Time: ${now.toString('dddd yyyy-MM-dd HH:mm', french)}');
+    print(
+        'Local Time: ${now.inLocalZone().toString('dddd yyyy-MM-dd HH:mm', french)}\n');
+
+    print('Parse French Formatted ZonedDateTime');
+
+    // without the 'z' parsing will be forced to interpret the timezone as UTC
+    var localText =
+        now.inLocalZone().toString('dddd yyyy-MM-dd HH:mm z', french);
+
+    var localClone = ZonedDateTimePattern.createWithCulture(
+            'dddd yyyy-MM-dd HH:mm z', french)
+        .parse(localText);
+
+    print(localClone.value);
+  } catch (error, stack) {
+    print(error);
+    print(stack);
+  }
 }

@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart' as Vector;
 
 class ShapesPainter extends CustomPainter {
+  DateTime timeforclock;
 
+  ShapesPainter({@required this.timeforclock});
   @override
   void paint(Canvas canvas, Size size) {
-    
     var angle = Vector.radians(-90);
-    
-    final double r = sqrt(size.width * size.width + size.height * size.height) / 2;
+
+    final double r =
+        sqrt(size.width * size.width + size.height * size.height) / 2;
     final alpha = atan(size.height / size.width);
     final beta = alpha + angle;
     final shiftY = r * sin(beta);
@@ -19,7 +21,7 @@ class ShapesPainter extends CustomPainter {
     canvas.translate(translateX, translateY);
     canvas.rotate(angle);
 
-    DateTime now = DateTime.now();
+    DateTime now = timeforclock;
     final paint = Paint();
     var center = Offset(size.width / 2, size.height / 2);
     paint.color = Colors.white;
@@ -32,9 +34,11 @@ class ShapesPainter extends CustomPainter {
     final secondsP1 = center;
     double secondDegree = 360 / 60 * now.second;
     // x = cx + r * cos(a)
-    double x = (size.width / 2) + (size.width / 3- 20) * cos(Vector.radians(secondDegree));
+    double x = (size.width / 2) +
+        (size.width / 3 - 20) * cos(Vector.radians(secondDegree));
     // y = cy + r * sin(a)
-    double y = (size.height / 2) + (size.width / 3 - 20) * sin(Vector.radians(secondDegree));
+    double y = (size.height / 2) +
+        (size.width / 3 - 20) * sin(Vector.radians(secondDegree));
 
     final secondsP2 = Offset(x, y);
 
@@ -49,9 +53,11 @@ class ShapesPainter extends CustomPainter {
     final minutesP1 = center;
     double minuteDegree = 360 / 60 * now.minute;
     // x = cx + r * cos(a)
-    x = (size.width / 2) + (size.width / 3 - 40) * cos(Vector.radians(minuteDegree));
+    x = (size.width / 2) +
+        (size.width / 3 - 40) * cos(Vector.radians(minuteDegree));
     // y = cy + r * sin(a)
-    y = (size.height / 2) + (size.width / 3 - 40) * sin(Vector.radians(minuteDegree));
+    y = (size.height / 2) +
+        (size.width / 3 - 40) * sin(Vector.radians(minuteDegree));
 
     final minutesP2 = Offset(x, y);
 
@@ -66,9 +72,11 @@ class ShapesPainter extends CustomPainter {
     double hourseDegree = 360 / 12 * (now.hour - 12);
     hourseDegree += 30 / 60 * now.minute;
     // x = cx + r * cos(a)
-    x = (size.width / 2) + (size.width / 3 - 60) * cos(Vector.radians(hourseDegree));
+    x = (size.width / 2) +
+        (size.width / 3 - 60) * cos(Vector.radians(hourseDegree));
     // y = cy + r * sin(a)
-    y = (size.height / 2) + (size.width / 3 - 60) * sin(Vector.radians(hourseDegree));
+    y = (size.height / 2) +
+        (size.width / 3 - 60) * sin(Vector.radians(hourseDegree));
 
     final p2 = Offset(x, y);
 
@@ -80,23 +88,26 @@ class ShapesPainter extends CustomPainter {
     /**
      * External lines
      */
-    for(int i = 0; i<60;i++){
-
+    for (int i = 0; i < 60; i++) {
       // Calculate line position
       double minute = 360 / 60 * i;
 
       // Set style every 5 minutes
-      paint.color = (i % 5 == 0)?Color(0xff65D1BA):Colors.white;
-      paint.strokeWidth = (i % 5 == 0)?4:1;
-      
-      int distance =  (i % 5 == 0)?10:15;
+      paint.color = (i % 5 == 0) ? Color(0xff65D1BA) : Colors.white;
+      paint.strokeWidth = (i % 5 == 0) ? 4 : 1;
 
-      double x1 = (size.width / 2) + (size.width / 3 + distance) * cos(Vector.radians(minute));
-      double y1 = (size.height / 2) + (size.width / 3 + distance) * sin(Vector.radians(minute));
+      int distance = (i % 5 == 0) ? 10 : 15;
+
+      double x1 = (size.width / 2) +
+          (size.width / 3 + distance) * cos(Vector.radians(minute));
+      double y1 = (size.height / 2) +
+          (size.width / 3 + distance) * sin(Vector.radians(minute));
       final p1 = Offset(x1, y1);
-      
-      double x2 = (size.width / 2) + (size.width / 3 + 30) * cos(Vector.radians(minute));
-      double y2 = (size.height / 2) + (size.width / 3 + 30) * sin(Vector.radians(minute));
+
+      double x2 = (size.width / 2) +
+          (size.width / 3 + 30) * cos(Vector.radians(minute));
+      double y2 = (size.height / 2) +
+          (size.width / 3 + 30) * sin(Vector.radians(minute));
       final p2 = Offset(x2, y2);
 
       canvas.drawLine(p1, p2, paint);

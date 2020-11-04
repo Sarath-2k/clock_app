@@ -26,9 +26,10 @@ class _AlarmAppState extends State<AlarmApp> {
 }
 
 class AlarmTime {
-  String key;
-  bool locked;
-  AlarmTime({this.key, this.locked});
+  List days;
+  TimeOfDay time;
+  AlarmTime({this.days, this.time});
 }
 
 List<AlarmTime> alarmlist = [];
+int alarmcount = alarmlist.length;

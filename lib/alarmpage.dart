@@ -1,5 +1,5 @@
 import 'package:clock_app/add_alarm.dart';
-import 'package:clock_app/widgets/alarm_item.dart';
+import 'package:clock_app/main.dart';
 import 'package:flutter/material.dart';
 
 class AlarmPage extends StatefulWidget {
@@ -13,9 +13,14 @@ class _AlarmPageState extends State<AlarmPage> {
     return Scaffold(
       body: Container(
         color: Colors.black,
-        child: ListView(
-          children: <Widget>[],
-        ),
+        child: ListView.builder(
+            itemCount: alarmcount,
+            itemBuilder: (BuildContext context, int count) => ListTile(
+                  leading: Text(
+                    alarmlist[count].time.toString(),
+                    style: TextStyle(color: Color(0xff65D1BA)),
+                  ),
+                )),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -24,7 +29,7 @@ class _AlarmPageState extends State<AlarmPage> {
             builder: (context) {
               return Dialog(
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(40)),
+                      borderRadius: BorderRadius.circular(400)),
                   elevation: 16,
                   child: Container(
                     height: 400.0,
