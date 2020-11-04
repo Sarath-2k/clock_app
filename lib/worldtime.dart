@@ -42,7 +42,8 @@ class _WorldClockState extends State<WorldClock> {
           Padding(
             padding: EdgeInsets.all(5.0),
             child: CustomPaint(
-              painter: ShapesPainter(timeforclock: utc),
+              painter:
+                  ShapesPainter(timeforclock: DateTime.now().subtract(change)),
               child: Container(
                 height: 400,
               ),
@@ -60,6 +61,8 @@ class _WorldClockState extends State<WorldClock> {
         ],
       ),
       Divider(
+        indent: 50,
+        endIndent: 50,
         color: Colors.grey[800],
       ),
       Center(
