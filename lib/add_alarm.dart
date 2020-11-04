@@ -1,4 +1,4 @@
-import 'package:clock_app/main.dart';
+import 'package:clock_app/11.dart';
 import 'package:day_selector/day_selector.dart';
 import 'package:flutter/material.dart';
 
@@ -108,7 +108,7 @@ class _AddAlarmState extends State<AddAlarm> {
                           Text('Save', style: TextStyle(color: Colors.white)),
                       onPressed: () {
                         alarmlist[alarmcount].days = selected;
-                        alarmcount++;
+                        alarmcount = alarmcount + 1;
                         Navigator.of(context).pop();
                       })
                 ],
