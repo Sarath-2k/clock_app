@@ -1,10 +1,10 @@
 import 'dart:async';
-
-import 'package:clock_app/11.dart';
 import 'package:clock_app/shapes_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:clock_app/home.dart';
 import 'package:intl/intl.dart';
+
+import 'main.dart';
 
 class WorldClock extends StatefulWidget {
   @override

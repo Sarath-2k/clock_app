@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:clock_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -45,6 +46,7 @@ class _TimerPageState extends State<TimerPage> {
               volume: 1, // Android only - API >= 28
               asAlarm: true, // Android only - all APIs
             );
+            timeralarm(context);
           }
         } else if (timefortimer < 60) {
           timetodisplay = timefortimer.toString();

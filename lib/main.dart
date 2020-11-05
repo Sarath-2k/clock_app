@@ -1,16 +1,17 @@
-// Copyright 2017 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-// ignore_for_file: public_member_api_docs
+import 'package:android_alarm_manager/android_alarm_manager.dart';
+import 'package:clock_app/alarmpage.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import 'dart:isolate';
-import 'dart:math';
+// import 'dart:math';
 import 'dart:ui';
 
-import 'package:android_alarm_manager/android_alarm_manager.dart';
+// import 'package:android_alarm_manager/android_alarm_manager.dart';
+// import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/material.dart';
 
 /// The [SharedPreferences] key to access the alarm fire count.
 const String countKey = 'count';
@@ -25,11 +26,8 @@ final ReceivePort port = ReceivePort();
 SharedPreferences prefs;
 
 Future<void> main() async {
-  // TODO(bkonyi): uncomment
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Register the UI isolate's SendPort to allow for communication from the
-  // background isolate.
   IsolateNameServer.registerPortWithName(
     port.sendPort,
     isolateName,
@@ -38,118 +36,185 @@ Future<void> main() async {
   if (!prefs.containsKey(countKey)) {
     await prefs.setInt(countKey, 0);
   }
-  runApp(AlarmManagerExampleApp());
+  runApp(AlarmApp());
 }
 
-/// Example app for Espresso plugin.
-class AlarmManagerExampleApp extends StatelessWidget {
-  // This widget is the root of your application.
+class AlarmApp extends StatefulWidget {
+  _AlarmAppState createState() => _AlarmAppState();
+}
+
+class _AlarmAppState extends State<AlarmApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      home: _AlarmHomePage(title: 'Flutter Demo Home Page'),
-    );
+        theme: ThemeData(
+            primaryColor: Color(0xFF000000), accentColor: Color(0xff65D1BA)),
+        debugShowCheckedModeBanner: false,
+        home: AlarmPage());
   }
 }
 
-class _AlarmHomePage extends StatefulWidget {
-  _AlarmHomePage({Key key, this.title}) : super(key: key);
-  final String title;
-
-  @override
-  _AlarmHomePageState createState() => _AlarmHomePageState();
+class AlarmTime {
+  List<bool> days;
+  TimeOfDay time;
+  AlarmTime({this.days, this.time});
 }
 
-class _AlarmHomePageState extends State<_AlarmHomePage> {
-  int _counter = 0;
+List<AlarmTime> alarmlist = [];
+int alarmcount = alarmlist.length;
+AlarmTime tempalarm;
 
-  @override
-  void initState() {
-    super.initState();
-    AndroidAlarmManager.initialize();
+List<String> timeZone = [
+  "Greenwich Mean Time",
+  "Universal Coordinated Time",
+  "European Central Time",
+  "Eastern European Time",
+  "(Arabic) Egypt Standard Time",
+  "Eastern African Time",
+  "Middle East Time",
+  "Near East Time",
+  "Pakistan Lahore Time",
+  "India Standard Time",
+  "Bangladesh Standard Time",
+  "Vietnam Standard Time",
+  "China Taiwan Time",
+  "Japan Standard Time",
+  "Australia Central Time",
+  "Australia Eastern Time",
+  "Solomon Standard Time",
+  "New Zealand Standard Time",
+  "Midway Islands Time",
+  "Hawaii Standard Time",
+  "Alaska Standard Time",
+  "Pacific Standard Time",
+  "Phoenix Standard Time",
+  "Mountain Standard Time",
+  "Central Standard Time",
+  "Eastern Standard Time",
+  "Indiana Eastern Standard Time",
+  "Puerto Rico and US Virgin Islands Time",
+  "Canada Newfoundland Time",
+  "Argentina Standard Time",
+  "Brazil Eastern Time",
+  "Central African Time",
+];
+List<int> hour = [
+  -5,
+  -5,
+  -4,
+  -3,
+  -3,
+  -2,
+  -2,
+  -1,
+  0,
+  0,
+  0,
+  1,
+  2,
+  3,
+  4,
+  4,
+  5,
+  6,
+  -16,
+  -15,
+  -14,
+  -13,
+  -12,
+  -12,
+  -11,
+  0,
+  0,
+  -1,
+  -2,
+  -2,
+  -2,
+  -4,
+];
+List<int> min = [
+  -30,
+  -30,
+  -30,
+  -30,
+  -30,
+  -30,
+  0,
+  -30,
+  -30,
+  0,
+  30,
+  30,
+  30,
+  30,
+  0,
+  30,
+  30,
+  30,
+  -30,
+  -30,
+  -30,
+  -30,
+  -30,
+  -30,
+  -30,
+  -30,
+  -30,
+  -30,
+  0,
+  -30,
+  -30,
+  -30,
+];
 
-    // Register for events from the background isolate. These messages will
-    // always coincide with an alarm firing.
-    port.listen((_) async => await _incrementCounter());
-  }
-
-  Future<void> _incrementCounter() async {
-    print('Increment counter!');
-
-    // Ensure we've loaded the updated count from the background isolate.
-    await prefs.reload();
-
-    setState(() {
-      _counter++;
-    });
-  }
-
-  // The background
-  static SendPort uiSendPort;
-
-  // The callback for our alarm
-  static Future<void> callback() async {
-    print('Alarm fired!');
-
-    // Get the previous cached count and increment it.
-    final prefs = await SharedPreferences.getInstance();
-    int currentCount = prefs.getInt(countKey);
-    await prefs.setInt(countKey, currentCount + 1);
-
-    // This will be null if we're running in the background.
-    uiSendPort ??= IsolateNameServer.lookupPortByName(isolateName);
-    uiSendPort?.send(null);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final textStyle = Theme.of(context).textTheme.headline4;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Alarm fired $_counter times',
-              style: textStyle,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Total alarms fired: ',
-                  style: textStyle,
-                ),
-                Text(
-                  prefs.getInt(countKey).toString(),
-                  key: ValueKey('BackgroundCountText'),
-                  style: textStyle,
-                ),
-              ],
-            ),
-            RaisedButton(
-              child: Text(
-                'Schedule OneShot Alarm',
-              ),
-              key: ValueKey('RegisterOneShotAlarm'),
-              onPressed: () async {
-                await AndroidAlarmManager.oneShot(
-                  const Duration(seconds: 5),
-                  // Ensure we have a unique alarm ID.
-                  Random().nextInt(pow(2, 31)),
-                  callback,
-                  exact: true,
-                  wakeup: true,
-                );
-              },
-            ),
-          ],
+alarmon(context) {
+  Alert(
+    context: context,
+    type: AlertType.warning,
+    title: "Alarm",
+    buttons: [
+      DialogButton(
+        child: Text(
+          "STOP",
+          style: TextStyle(color: Colors.white, fontSize: 18),
         ),
+        onPressed: () {
+          Navigator.pop(context);
+          FlutterRingtonePlayer.stop();
+        },
+        color: Color.fromRGBO(0, 179, 134, 1.0),
       ),
-    );
-  }
+      DialogButton(
+        child: Text(
+          "SNOOZE",
+          style: TextStyle(color: Colors.white, fontSize: 18),
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+          FlutterRingtonePlayer.stop();
+        },
+      )
+    ],
+  ).show();
+}
+
+timeralarm(context) {
+  Alert(
+    context: context,
+    type: AlertType.warning,
+    title: "TIME OUT",
+    buttons: [
+      DialogButton(
+        child: Text(
+          "STOP",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+          FlutterRingtonePlayer.stop();
+        },
+        width: 120,
+      )
+    ],
+  ).show();
 }
