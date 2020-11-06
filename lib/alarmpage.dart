@@ -138,7 +138,7 @@ class _AlarmPageState extends State<AlarmPage> {
                                                 TextStyle(color: Colors.white)),
                                         onPressed: () {
                                           setState(() {
-                                            AlarmTime tmp;
+                                            AlarmTime tmp = AlarmTime();
                                             tmp.days = selected;
                                             tmp.time = _selectedTime;
                                             // tempalarm.days = selected;

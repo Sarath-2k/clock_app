@@ -62,7 +62,7 @@ class AlarmTime {
 
 List<AlarmTime> alarmlist = [];
 int alarmcount = alarmlist.length;
-AlarmTime tempalarm;
+AlarmTime tempalarm = AlarmTime();
 
 List<String> timeZone = [
   "Greenwich Mean Time",
