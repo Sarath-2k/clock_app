@@ -45,6 +45,14 @@ class AlarmApp extends StatefulWidget {
 
 class _AlarmAppState extends State<AlarmApp> {
   @override
+  void initState() {
+    // TODO: implement initState
+    AndroidAlarmManager.initialize();
+    // _getAlarmlist();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
         theme: ThemeData(
@@ -54,15 +62,71 @@ class _AlarmAppState extends State<AlarmApp> {
   }
 }
 
+_getAlarmlist() async {}
+
 class AlarmTime {
   List<bool> days;
   TimeOfDay time;
-  AlarmTime({this.days, this.time});
+  bool active = true;
+  AlarmTime({this.days, this.time, this.active});
 }
 
+SharedPreferences sharedPreferences;
 List<AlarmTime> alarmlist = [];
 int alarmcount = alarmlist.length;
 AlarmTime tempalarm = AlarmTime();
+
+alarmon(context) {
+  Alert(
+    context: context,
+    type: AlertType.warning,
+    title: "Alarm",
+    buttons: [
+      DialogButton(
+        child: Text(
+          "STOP",
+          style: TextStyle(color: Colors.white, fontSize: 18),
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+          FlutterRingtonePlayer.stop();
+        },
+        color: Color.fromRGBO(0, 179, 134, 1.0),
+      ),
+      DialogButton(
+        child: Text(
+          "SNOOZE",
+          style: TextStyle(color: Colors.white, fontSize: 18),
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+          FlutterRingtonePlayer.stop();
+        },
+      )
+    ],
+  ).show();
+}
+
+timeralarm(context) {
+  Alert(
+    context: context,
+    type: AlertType.warning,
+    title: "TIME OUT",
+    buttons: [
+      DialogButton(
+        child: Text(
+          "STOP",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+          FlutterRingtonePlayer.stop();
+        },
+        width: 120,
+      )
+    ],
+  ).show();
+}
 
 List<String> timeZone = [
   "Greenwich Mean Time",
@@ -166,55 +230,3 @@ List<int> min = [
   -30,
   -30,
 ];
-
-alarmon(context) {
-  Alert(
-    context: context,
-    type: AlertType.warning,
-    title: "Alarm",
-    buttons: [
-      DialogButton(
-        child: Text(
-          "STOP",
-          style: TextStyle(color: Colors.white, fontSize: 18),
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-          FlutterRingtonePlayer.stop();
-        },
-        color: Color.fromRGBO(0, 179, 134, 1.0),
-      ),
-      DialogButton(
-        child: Text(
-          "SNOOZE",
-          style: TextStyle(color: Colors.white, fontSize: 18),
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-          FlutterRingtonePlayer.stop();
-        },
-      )
-    ],
-  ).show();
-}
-
-timeralarm(context) {
-  Alert(
-    context: context,
-    type: AlertType.warning,
-    title: "TIME OUT",
-    buttons: [
-      DialogButton(
-        child: Text(
-          "STOP",
-          style: TextStyle(color: Colors.white, fontSize: 20),
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-          FlutterRingtonePlayer.stop();
-        },
-        width: 120,
-      )
-    ],
-  ).show();
-}
